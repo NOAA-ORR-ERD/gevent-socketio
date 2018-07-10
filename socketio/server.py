@@ -150,6 +150,13 @@ def serve(app, **kw):
     host = kw.pop('host', '127.0.0.1')
     port = int(kw.pop('port', 6543))
 
+    if 'certfile' in kw:
+        from _ssl import PROTOCOL_TLSv1_2
+        if 'ssl_version' in kw:
+            kw['ssl_version'] = int(kw.pop('ssl_version'))
+        else:
+            kw['ssl_version'] = PROTOCOL_TLSv1_2
+
     transports = kw.pop('transports', None)
     if transports:
         transports = [x.strip() for x in transports.split(',')]
