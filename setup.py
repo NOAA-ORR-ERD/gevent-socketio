@@ -1,4 +1,5 @@
 import os
+import ast
 
 from setuptools import setup
 from setuptools import find_packages
@@ -27,22 +28,37 @@ class PyTest(TestCommand):
         import pytest
         pytest.main(self.test_args)
 
+
+def get_version_string():
+    """
+    custom version string getter from the package
+    """
+    with open("socketio/__init__.py") as init_file:
+        for line in init_file:
+            line = line.strip()
+            if line.startswith("__version__"):
+                ver = line.split("=")[1].strip()
+                return "{}.{}.{}".format(*ast.literal_eval(ver))
+
+
+
 setup(
-    name="gevent-socketio",
-    version="0.3.6",
+    name="gevent-socketio-erd",
+    version=get_version_string(),
     description=(
         "SocketIO server based on the Gevent pywsgi server, "
-        "a Python network library"),
+        "a Python network library"
+        "forked from the original by NOAA/ORR/ERD"),
     author="Jeffrey Gelens",
     author_email="jeffrey@noppo.pro",
-    maintainer="Alexandre Bourget",
+    maintainer="NOAA-ERD",
     maintainer_email="alex@bourget.cc",
     license="BSD",
-    url="https://github.com/abourget/gevent-socketio",
-    download_url="https://github.com/abourget/gevent-socketio",
+    url="https://github.com/NOAA-ORR-ERD/gevent-socketio",
+    download_url="https://github.com/NOAA-ORR-ERD/gevent-socketio",
     install_requires=get_reqs('pip-requirements.txt'),
     setup_requires=('versiontools >= 1.7'),
-    cmdclass = {'test': PyTest},
+    cmdclass={'test': PyTest},
     tests_require=get_reqs('pip-requirements-test.txt'),
     packages=find_packages(exclude=["examples", "tests"]),
     classifiers=[
